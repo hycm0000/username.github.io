@@ -2,57 +2,32 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>遗迹寻宝 RPG</title>
+<title>遗迹冒险测试</title>
 
 <style>
-
 body{
 background:#111;
 color:white;
-font-family:Microsoft YaHei;
-margin:0;
-}
-
-.main{
-max-width:500px;
-margin:auto;
-padding:15px;
-}
-
-.card{
-background:#222;
-padding:15px;
-margin-bottom:15px;
-border-radius:15px;
+font-family:Arial;
+text-align:center;
+padding:30px;
 }
 
 button{
-width:100%;
+font-size:20px;
 padding:15px;
-margin-top:10px;
-border:0;
 border-radius:10px;
 background:#4caf50;
 color:white;
-font-size:18px;
+border:0;
 }
 
-input{
-width:90%;
-padding:12px;
-font-size:18px;
+.box{
+background:#222;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
 }
-
-.hp{
-color:red;
-}
-
-.gold{
-color:#ffd700;
-}
-
 </style>
 
 </head>
@@ -61,181 +36,37 @@ color:#ffd700;
 <body>
 
 
-<div class="main">
+<h1>🏰 遗迹冒险</h1>
 
 
-<div class="card">
+<div class="box">
 
-<h2>🏰 遗迹寻宝 RPG</h2>
+<input id="name" placeholder="输入名字">
 
-<p>
-微信群2小时冒险小游戏
-</p>
-
-</div>
-
-
-
-<div class="card" id="create">
-
-
-<h3>创建角色</h3>
-
-
-<input id="name"
-placeholder="输入你的名字">
-
+<br><br>
 
 <button onclick="startGame()">
-
 开始冒险
-
 </button>
 
 
-</div>
-
-
-
-<div id="game" style="display:none">
-
-
-<div class="card">
-
-
-<h3 id="playerName"></h3>
-
-
-等级：
-<span id="level"></span>
-
-<br>
-
-
-生命：
-<span class="hp" id="hp"></span>
-
-<br>
-
-
-攻击：
-<span id="atk"></span>
-
-
-<br>
-
-
-金币：
-<span class="gold" id="gold"></span>
-
-
-<br>
-
-
-经验：
-<span id="exp"></span>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-
-<h3>🎒 背包</h3>
-
-<div id="bag">
-
-</div>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-
-<h3>🗺 探索遗迹</h3>
-
-
-<button onclick="explore()">
-
-🔍 探索
-
-</button>
-
-
-<button onclick="bossFight()">
-
-🐉 挑战Boss
-
-</button>
-
-
-
-<p id="log">
-
-等待行动...
-
+<p id="msg">
+等待...
 </p>
 
 
 </div>
-
-
-
-<div class="card">
-
-<h3>世界状态</h3>
-
-
-<p id="status"></p>
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
 
 
 
 <script>
 
-
-let player={
-
-name:"",
-level:1,
-hp:100,
-maxhp:100,
-atk:15,
-gold:50,
-exp:0,
-bag:[]
-
-};
-
-
-let boss=500;
-
-
-
 function startGame(){
 
+let name=document.getElementById("name").value;
 
-let n=document.getElementById("name").value;
 
-
-if(n.trim()==""){
+if(name==""){
 
 alert("请输入名字");
 
@@ -244,516 +75,11 @@ return;
 }
 
 
-player.name=n;
-
-
-document.getElementById("create").style.display="none";
-
-
-document.getElementById("game").style.display="block";
-
-
-update();
-
-
-log("🎉 冒险开始！探索遗迹寻找宝藏吧！");
+document.getElementById("msg").innerHTML=
+"欢迎冒险者 "+name+"！<br>你进入了遗迹。";
 
 
 }
-
-
-
-
-function update(){
-
-
-document.getElementById("playerName").innerHTML=
-"⚔ "+player.name;
-
-
-document.getElementById("level").innerHTML=
-player.level;
-
-
-document.getElementById("hp").innerHTML=
-player.hp+"/"+player.maxhp;
-
-
-document.getElementById("atk").innerHTML=
-player.atk;
-
-
-document.getElementById("gold").innerHTML=
-player.gold;
-
-
-document.getElementById("exp").innerHTML=
-player.exp;
-
-
-
-document.getElementById("bag").innerHTML=
-
-player.bag.length?
-player.bag.join("<br>"):
-"暂无装备";
-
-
-
-document.getElementById("status").innerHTML=
-
-"🐉 Boss HP："+boss;
-
-
-
-}
-
-
-
-
-function log(t){
-
-document.getElementById("log").innerHTML=t;
-
-}
-
-
-
-
-function explore(){
-
-
-let r=Math.random();
-
-
-if(r<0.35){
-
-treasure();
-
-}
-
-else if(r<0.8){
-
-monster();
-
-}
-
-else{
-
-event();
-
-}
-
-
-update();
-
-
-}
-
-// =========================
-// 宝箱
-// =========================
-
-function treasure(){
-
-
-let r=Math.random();
-
-
-
-if(r<0.5){
-
-
-let g=Math.floor(Math.random()*50)+20;
-
-
-player.gold+=g;
-
-
-log(
-"📦 发现普通宝箱<br>"+
-"获得金币 +"+g
-);
-
-
-}
-
-else if(r<0.85){
-
-
-player.atk+=10;
-
-
-player.bag.push(
-"⚔ 精铁剑 攻击+10"
-);
-
-
-log(
-"💎 稀有宝箱<br>"+
-"获得精铁剑<br>"+
-"攻击提升"
-);
-
-
-}
-
-else{
-
-
-player.atk+=30;
-
-
-player.bag.push(
-"🔥 炎龙剑 攻击+30"
-);
-
-
-log(
-"★★★★★<br>"+
-"传说宝箱开启！<br>"+
-"获得炎龙剑"
-);
-
-
-}
-
-
-}
-
-
-
-// =========================
-// 怪物
-// =========================
-
-
-function monster(){
-
-
-let list=[
-
-"哥布林",
-"骷髅战士",
-"狼人",
-"遗迹守卫",
-"黑暗骑士"
-
-];
-
-
-let enemy=
-list[
-Math.floor(Math.random()*list.length)
-];
-
-
-
-let hp=
-Math.floor(Math.random()*80)+30;
-
-
-
-if(player.atk>=hp){
-
-
-let exp=
-Math.floor(Math.random()*30)+20;
-
-
-let gold=
-Math.floor(Math.random()*40)+10;
-
-
-player.exp+=exp;
-
-player.gold+=gold;
-
-
-
-log(
-
-"⚔ 击败 "+enemy+
-"<br>经验 +"+exp+
-"<br>金币 +"+gold
-
-);
-
-
-
-levelUp();
-
-
-
-}
-
-else{
-
-
-let damage=
-Math.floor(Math.random()*20)+5;
-
-
-player.hp-=damage;
-
-
-
-log(
-
-"👹 遇到 "+enemy+
-"<br>受到伤害 -"+damage+
-"<br>生命剩余 "+player.hp
-
-);
-
-
-
-if(player.hp<=0){
-
-
-player.hp=player.maxhp;
-
-player.gold=Math.max(
-0,
-player.gold-50
-);
-
-
-log(
-"☠ 战败<br>"+
-"损失50金币复活"
-);
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-
-
-// =========================
-// 随机事件
-// =========================
-
-
-function event(){
-
-
-let arr=[
-
-
-"🌲 发现生命泉水，恢复20生命",
-
-"💰 找到金币，获得50金币",
-
-"🧙 神秘老人送你药水",
-
-"☠ 触发陷阱，损失15生命"
-
-];
-
-
-let e=
-arr[Math.floor(Math.random()*arr.length)];
-
-
-
-if(e.indexOf("恢复")>-1){
-
-player.hp=Math.min(
-player.maxhp,
-player.hp+20
-);
-
-}
-
-
-
-if(e.indexOf("金币")>-1){
-
-player.gold+=50;
-
-}
-
-
-
-if(e.indexOf("损失")>-1){
-
-player.hp-=15;
-
-}
-
-
-
-player.bag.push(e);
-
-
-log(e);
-
-
-
-}
-
-
-
-// =========================
-// 升级
-// =========================
-
-
-function levelUp(){
-
-
-let need=
-player.level*50;
-
-
-
-if(player.exp>=need){
-
-
-player.level++;
-
-
-player.exp=0;
-
-
-player.maxhp+=30;
-
-
-player.hp=player.maxhp;
-
-
-player.atk+=8;
-
-
-
-log(
-
-"🎉 升级成功！<br>"+
-"达到 Lv."+player.level+
-"<br>攻击+8 生命+30"
-
-);
-
-
-}
-
-
-
-}
-
-
-
-// =========================
-// Boss
-// =========================
-
-
-function bossFight(){
-
-
-if(boss<=0){
-
-
-log(
-"👑 已经获得最终宝藏！"
-);
-
-
-return;
-
-
-}
-
-
-
-let damage=
-player.atk+
-Math.floor(Math.random()*30);
-
-
-
-boss-=damage;
-
-
-
-let hurt=
-Math.floor(Math.random()*15)+5;
-
-
-
-player.hp-=hurt;
-
-
-
-if(boss<=0){
-
-
-boss=0;
-
-
-player.gold+=500;
-
-
-player.bag.push(
-"👑 王者皇冠"
-);
-
-
-
-log(
-
-"🎉🎉🎉<br>"+
-"击败最终Boss！<br>"+
-"获得王者皇冠<br>"+
-"金币+500"
-
-);
-
-
-
-}
-
-else{
-
-
-log(
-
-"🐉 攻击Boss<br>"+
-"造成 "+damage+
-" 伤害<br>"+
-"Boss剩余HP："+boss+
-"<br>受到伤害："+hurt
-
-);
-
-
-
-}
-
-
-
-if(player.hp<=0){
-
-player.hp=player.maxhp;
-
-}
-
-
-
-update();
-
-
-}
-
 
 
 </script>
