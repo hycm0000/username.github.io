@@ -1,1 +1,746 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>遗迹寻宝 RPG</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:"Microsoft YaHei";
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+    padding:15px;
+}
+
+.card{
+    background:#222;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 0 10px #000;
+}
+
+button{
+
+    width:100%;
+    padding:12px;
+    margin:5px 0;
+
+    border:none;
+    border-radius:10px;
+
+    background:#4caf50;
+    color:white;
+
+    font-size:18px;
+
+}
+
+button:hover{
+    opacity:0.8;
+}
+
+
+.gold{
+    color:#ffd700;
+}
+
+.hp{
+    color:#ff5555;
+}
+
+.item{
+    background:#333;
+    padding:8px;
+    border-radius:8px;
+    margin:5px;
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<div class="card">
+
+<h2>
+🏰 遗迹寻宝 RPG
+</h2>
+
+<p>
+两小时冒险小游戏
+</p>
+
+</div>
+
+
+
+<div class="card" id="create">
+
+<h3>
+创建角色
+</h3>
+
+
+<input id="name"
+placeholder="输入你的名字"
+style="width:90%;padding:10px">
+
+
+<button onclick="startGame()">
+开始冒险
+</button>
+
+
+</div>
+
+
+
+<div id="game" style="display:none">
+
+
+<div class="card">
+
+
+<h3 id="playerName"></h3>
+
+
+<p>
+等级:
+<span id="level"></span>
+</p>
+
+
+<p>
+生命:
+<span class="hp" id="hp"></span>
+</p>
+
+
+<p>
+攻击:
+<span id="atk"></span>
+</p>
+
+
+<p>
+金币:
+<span class="gold" id="gold"></span>
+</p>
+
+
+<p>
+经验:
+<span id="exp"></span>
+</p>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🎒 背包
+</h3>
+
+
+<div id="bag">
+
+暂无物品
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+🗺 探索遗迹
+</h3>
+
+
+<button onclick="explore()">
+🔍 探索
+</button>
+
+
+<button onclick="boss()">
+🐉 挑战Boss
+</button>
+
+
+<div id="log">
+
+等待行动...
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🏆 状态
+</h3>
+
+<div id="status">
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+let player={
+
+name:"",
+level:1,
+hp:100,
+atk:15,
+gold:50,
+exp:0,
+bag:[]
+
+};
+
+
+
+function startGame(){
+
+
+let n=document.getElementById("name").value;
+
+
+if(!n){
+
+alert("请输入名字");
+
+return;
+
+}
+
+
+player.name=n;
+
+
+document.getElementById("create").style.display="none";
+
+document.getElementById("game").style.display="block";
+
+
+update();
+
+
+}
+
+
+function update(){
+
+
+document.getElementById("playerName").innerHTML=
+"⚔ "+player.name;
+
+
+document.getElementById("level").innerHTML=
+player.level;
+
+
+document.getElementById("hp").innerHTML=
+player.hp;
+
+
+document.getElementById("atk").innerHTML=
+player.atk;
+
+
+document.getElementById("gold").innerHTML=
+player.gold;
+
+
+document.getElementById("exp").innerHTML=
+player.exp;
+
+
+
+document.getElementById("bag").innerHTML=
+player.bag.length?
+player.bag.join("<br>"):
+"暂无物品";
+
+
+}
+<script>
+
+
+let player={
+
+name:"",
+level:1,
+hp:100,
+maxhp:100,
+atk:15,
+gold:50,
+exp:0,
+bag:[]
+
+};
+
+
+
+function startGame(){
+
+
+let n=document.getElementById("name").value;
+
+
+if(!n){
+
+alert("请输入名字");
+
+return;
+
+}
+
+
+player.name=n;
+
+
+document.getElementById("create").style.display="none";
+
+document.getElementById("game").style.display="block";
+
+
+update();
+
+
+}
+
+
+
+
+function update(){
+
+
+document.getElementById("playerName").innerHTML=
+"⚔ "+player.name;
+
+
+document.getElementById("level").innerHTML=
+player.level;
+
+
+document.getElementById("hp").innerHTML=
+player.hp+"/"+player.maxhp;
+
+
+document.getElementById("atk").innerHTML=
+player.atk;
+
+
+document.getElementById("gold").innerHTML=
+player.gold;
+
+
+document.getElementById("exp").innerHTML=
+player.exp;
+
+
+
+document.getElementById("bag").innerHTML=
+player.bag.length?
+player.bag.join("<br>"):
+"暂无物品";
+
+
+}
+
+
+
+
+function log(t){
+
+document.getElementById("log").innerHTML=
+t;
+
+}
+
+
+
+
+//探索
+
+function explore(){
+
+
+let r=Math.random();
+
+
+
+if(r<0.3){
+
+
+treasure();
+
+
+}
+
+else if(r<0.75){
+
+
+monster();
+
+
+}
+
+else{
+
+
+event();
+
+
+}
+
+
+}
+
+
+
+//宝箱
+
+function treasure(){
+
+
+let box=Math.random();
+
+
+
+if(box<0.5){
+
+
+let gold=Math.floor(Math.random()*50)+20;
+
+
+player.gold+=gold;
+
+
+log(
+"📦 发现普通宝箱<br>"+
+"获得金币 "+gold
+);
+
+
+
+}
+
+
+else if(box<0.85){
+
+
+let item="⚔ 精铁剑 攻击+10";
+
+
+player.atk+=10;
+
+
+player.bag.push(item);
+
+
+log(
+"💎 稀有宝箱<br>"+
+"获得 "+item
+);
+
+
+}
+
+
+else{
+
+
+player.atk+=30;
+
+
+player.bag.push(
+"🔥 传说武器：炎龙剑 攻击+30"
+);
+
+
+log(
+"★★★★★<br>"+
+"开启传说宝箱！<br>"+
+"获得炎龙剑"
+);
+
+
+}
+
+
+
+update();
+
+
+}
+
+
+
+
+//怪物
+
+function monster(){
+
+
+let monsters=[
+
+"哥布林",
+
+"骷髅战士",
+
+"黑暗狼人",
+
+"遗迹守卫"
+
+];
+
+
+let m=
+monsters[
+Math.floor(Math.random()*monsters.length)
+];
+
+
+let hp=
+Math.floor(Math.random()*50)+30;
+
+
+
+let damage=
+Math.floor(Math.random()*10)+5;
+
+
+
+if(player.atk>=hp){
+
+
+let exp=
+Math.floor(Math.random()*30)+20;
+
+
+let gold=
+Math.floor(Math.random()*40)+10;
+
+
+player.exp+=exp;
+
+player.gold+=gold;
+
+
+log(
+"⚔ 击败 "+m+
+"<br>获得经验 "+exp+
+"<br>金币 "+gold
+);
+
+
+
+levelUp();
+
+
+
+}
+
+else{
+
+
+player.hp-=damage;
+
+
+log(
+
+"👹 遇到 "+m+
+"<br>受到攻击 -"+damage+
+"<br>剩余生命 "+player.hp
+
+);
+
+
+
+if(player.hp<=0){
+
+
+log(
+"☠ 你倒下了<br>"+
+"支付50金币复活"
+);
+
+
+player.gold=Math.max(0,player.gold-50);
+
+player.hp=player.maxhp;
+
+
+}
+
+
+}
+
+
+
+update();
+
+
+
+}
+
+
+
+//随机事件
+
+function event(){
+
+
+let e=[
+
+"🌲 发现隐藏泉水，生命恢复20",
+
+"💰 捡到金币30",
+
+"🧙 神秘老人赠送药水",
+
+"⚡ 遭遇陷阱，生命减少10"
+
+];
+
+
+let x=
+e[Math.floor(Math.random()*e.length)];
+
+
+if(x.includes("恢复")){
+
+player.hp=Math.min(
+player.maxhp,
+player.hp+20
+);
+
+}
+
+
+if(x.includes("金币")){
+
+player.gold+=30;
+
+}
+
+
+if(x.includes("陷阱")){
+
+player.hp-=10;
+
+}
+
+
+
+player.bag.push(x);
+
+
+
+log(x);
+
+
+update();
+
+
+}
+
+
+
+//升级
+
+function levelUp(){
+
+
+let need=
+player.level*50;
+
+
+
+if(player.exp>=need){
+
+
+player.level++;
+
+player.exp=0;
+
+
+player.maxhp+=30;
+
+player.hp=player.maxhp;
+
+
+player.atk+=8;
+
+
+log(
+
+"🎉 升级成功！<br>"+
+"当前等级 "+player.level+
+"<br>攻击+8<br>生命+30"
+
+);
+
+
+
+}
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
