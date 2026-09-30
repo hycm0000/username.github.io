@@ -1,34 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
-<title>遗迹冒险测试</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>遗迹寻宝 RPG</title>
+
 
 <style>
+
 body{
-background:#111;
+
+margin:0;
+background:#101010;
 color:white;
-font-family:Arial;
-text-align:center;
-padding:30px;
+font-family:"Microsoft YaHei";
+
 }
+
+
+.main{
+
+max-width:520px;
+margin:auto;
+padding:15px;
+
+}
+
+
+
+.card{
+
+background:#222;
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+
+}
+
+
 
 button{
-font-size:20px;
-padding:15px;
-border-radius:10px;
-background:#4caf50;
-color:white;
+
+width:100%;
+padding:14px;
+
+margin-top:10px;
+
 border:0;
+
+border-radius:10px;
+
+background:#4caf50;
+
+color:white;
+
+font-size:18px;
+
 }
 
-.box{
-background:#222;
-padding:20px;
-border-radius:15px;
-margin-top:20px;
+
+
+input,select{
+
+width:95%;
+
+padding:12px;
+
+font-size:18px;
+
+border-radius:8px;
+
 }
+
+
+
+.hp{
+
+color:#ff5555;
+
+}
+
+
+.gold{
+
+color:#ffd700;
+
+}
+
+
+.item{
+
+background:#333;
+
+padding:8px;
+
+margin-top:5px;
+
+border-radius:8px;
+
+}
+
+
+
 </style>
+
 
 </head>
 
@@ -36,23 +114,205 @@ margin-top:20px;
 <body>
 
 
-<h1>🏰 遗迹冒险</h1>
+<div class="main">
 
 
-<div class="box">
+<div class="card">
 
-<input id="name" placeholder="输入名字">
+
+<h1>
+🏰 遗迹寻宝 RPG
+</h1>
+
+
+<p>
+微信群2小时冒险游戏
+</p>
+
+
+</div>
+
+
+
+<div class="card" id="create">
+
+
+<h3>
+创建冒险者
+</h3>
+
+
+
+<input id="name"
+placeholder="输入你的名字">
+
 
 <br><br>
 
+
+<select id="job">
+
+
+<option value="warrior">
+⚔ 战士 - 高生命
+</option>
+
+
+<option value="mage">
+🔥 法师 - 高攻击
+</option>
+
+
+<option value="rogue">
+🗡 盗贼 - 幸运寻宝
+</option>
+
+
+</select>
+
+
+
 <button onclick="startGame()">
+
 开始冒险
+
 </button>
 
 
-<p id="msg">
-等待...
+</div>
+
+
+
+
+<div id="game" style="display:none">
+
+
+
+<div class="card">
+
+
+<h2 id="playerName"></h2>
+
+
+等级：
+<span id="level"></span>
+
+<br>
+
+
+生命：
+
+<span class="hp" id="hp"></span>
+
+
+<br>
+
+
+攻击：
+
+<span id="atk"></span>
+
+
+<br>
+
+
+金币：
+
+<span class="gold" id="gold"></span>
+
+
+<br>
+
+
+经验：
+
+<span id="exp"></span>
+
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🎒 背包
+</h3>
+
+
+<div id="bag">
+
+空
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+🗺 遗迹探索
+</h3>
+
+
+<button onclick="explore()">
+
+🔍 探索
+
+</button>
+
+
+
+<button onclick="fightBoss()">
+
+🐉 挑战最终Boss
+
+</button>
+
+
+<p id="log">
+
+等待行动...
+
 </p>
+
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+世界状态
+</h3>
+
+
+<p id="status">
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
 
 
 </div>
@@ -61,12 +321,38 @@ margin-top:20px;
 
 <script>
 
+
+let player={
+
+name:"",
+job:"",
+level:1,
+
+hp:100,
+maxhp:100,
+
+atk:15,
+
+gold:50,
+
+exp:0,
+
+bag:[]
+
+};
+
+
+let bossHP=800;
+
+
+
 function startGame(){
 
-let name=document.getElementById("name").value;
+
+let n=document.getElementById("name").value;
 
 
-if(name==""){
+if(n.trim()==""){
 
 alert("请输入名字");
 
@@ -75,16 +361,691 @@ return;
 }
 
 
-document.getElementById("msg").innerHTML=
-"欢迎冒险者 "+name+"！<br>你进入了遗迹。";
+player.name=n;
+
+player.job=document.getElementById("job").value;
+
+
+
+if(player.job=="warrior"){
+
+player.hp=150;
+
+player.maxhp=150;
+
+player.atk=15;
+
+}
+
+
+if(player.job=="mage"){
+
+player.hp=80;
+
+player.maxhp=80;
+
+player.atk=30;
+
+}
+
+
+if(player.job=="rogue"){
+
+player.hp=100;
+
+player.maxhp=100;
+
+player.atk=20;
+
+}
+
+
+
+document.getElementById("create").style.display="none";
+
+
+document.getElementById("game").style.display="block";
+
+
+update();
+
+
+log(
+"🎉 欢迎 "+player.name+
+" 进入遗迹！"
+);
 
 
 }
+
+
+
+
+
+function update(){
+
+
+document.getElementById("playerName").innerHTML=
+"⚔ "+player.name;
+
+
+document.getElementById("level").innerHTML=
+player.level;
+
+
+document.getElementById("hp").innerHTML=
+player.hp+"/"+player.maxhp;
+
+
+document.getElementById("atk").innerHTML=
+player.atk;
+
+
+document.getElementById("gold").innerHTML=
+player.gold;
+
+
+document.getElementById("exp").innerHTML=
+player.exp;
+
+
+
+document.getElementById("bag").innerHTML=
+
+player.bag.length?
+
+player.bag.join("<br>"):
+
+"空";
+
+
+
+document.getElementById("status").innerHTML=
+
+"🐉 Boss HP："+bossHP;
+
+
+
+}
+
+
+
+function log(t){
+
+document.getElementById("log").innerHTML=t;
+
+}
+
+
+// =========================
+// 探索系统
+// =========================
+
+function explore(){
+
+
+let r=Math.random();
+
+
+if(r<0.35){
+
+treasure();
+
+}
+
+else if(r<0.75){
+
+monster();
+
+}
+
+else{
+
+randomEvent();
+
+}
+
+
+update();
+
+
+}
+
+
+
+// =========================
+// 宝箱系统
+// =========================
+
+
+function treasure(){
+
+
+let r=Math.random();
+
+
+
+if(r<0.45){
+
+
+let gold=
+Math.floor(Math.random()*80)+20;
+
+
+player.gold+=gold;
+
+
+log(
+
+"📦 普通宝箱<br>"+
+"获得金币 +"+gold
+
+);
+
+
+}
+
+
+
+else if(r<0.75){
+
+
+let item="⚔ 精铁剑 攻击+15";
+
+
+player.atk+=15;
+
+
+player.bag.push(item);
+
+
+
+log(
+
+"💎 稀有宝箱<br>"+
+"获得 "+item
+
+);
+
+
+
+}
+
+
+
+else if(r<0.95){
+
+
+let item="🛡 圣光盾 生命+80";
+
+
+player.maxhp+=80;
+
+player.hp+=80;
+
+
+player.bag.push(item);
+
+
+
+log(
+
+"✨ 史诗宝箱<br>"+
+"获得 "+item
+
+);
+
+
+}
+
+
+
+else{
+
+
+let item="👑 神器：遗迹王冠";
+
+
+player.atk+=50;
+
+
+player.bag.push(item);
+
+
+
+log(
+
+"★★★★★<br>"+
+"开启传说宝箱！<br>"+
+"获得神器！"
+
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+// =========================
+// 怪物系统
+// =========================
+
+
+function monster(){
+
+
+
+let monsters=[
+
+"哥布林",
+
+"骷髅战士",
+
+"狼人",
+
+"遗迹守卫",
+
+"黑暗骑士",
+
+"深渊恶魔"
+
+];
+
+
+
+let enemy=
+
+monsters[
+Math.floor(Math.random()*monsters.length)
+];
+
+
+
+let enemyHP=
+
+Math.floor(Math.random()*100)+30;
+
+
+
+let enemyATK=
+
+Math.floor(Math.random()*20)+5;
+
+
+
+if(player.atk>=enemyHP){
+
+
+
+let exp=
+
+Math.floor(Math.random()*40)+20;
+
+
+let gold=
+
+Math.floor(Math.random()*60)+10;
+
+
+
+player.exp+=exp;
+
+player.gold+=gold;
+
+
+
+log(
+
+"⚔ 击败 "+enemy+
+"<br>经验 +"+exp+
+"<br>金币 +"+gold
+
+);
+
+
+
+levelUp();
+
+
+
+}
+
+
+
+else{
+
+
+
+player.hp-=enemyATK;
+
+
+
+log(
+
+"👹 遇到 "+enemy+
+"<br>受到伤害 -"+enemyATK+
+"<br>剩余生命 "+player.hp
+
+);
+
+
+
+if(player.hp<=0){
+
+
+
+player.hp=player.maxhp;
+
+
+player.gold=Math.max(
+0,
+player.gold-50
+);
+
+
+
+log(
+
+"☠ 你被击败<br>"+
+"消耗50金币复活"
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+// =========================
+// 随机事件
+// =========================
+
+
+function randomEvent(){
+
+
+
+let events=[
+
+
+"🌲 发现生命泉水，恢复30生命",
+
+"💰 找到隐藏金币，获得100金币",
+
+"🧙 老法师赠送魔法卷轴",
+
+"☠ 遗迹机关触发，受到20伤害",
+
+"🍀 幸运降临，下一次宝箱品质提升"
+
+
+];
+
+
+
+let e=
+
+events[
+Math.floor(Math.random()*events.length)
+];
+
+
+
+if(e.includes("恢复")){
+
+
+player.hp=Math.min(
+
+player.maxhp,
+
+player.hp+30
+
+);
+
+
+}
+
+
+
+if(e.includes("金币")){
+
+
+player.gold+=100;
+
+
+}
+
+
+
+if(e.includes("受到")){
+
+
+player.hp-=20;
+
+
+}
+
+
+
+player.bag.push(e);
+
+
+
+log(e);
+
+
+
+}
+
+
+
+
+
+// =========================
+// 升级系统
+// =========================
+
+
+function levelUp(){
+
+
+
+let need=
+
+player.level*80;
+
+
+
+if(player.exp>=need){
+
+
+
+player.level++;
+
+
+player.exp=0;
+
+
+
+player.maxhp+=40;
+
+
+player.hp=player.maxhp;
+
+
+player.atk+=10;
+
+
+
+log(
+
+"🎉 升级成功！<br>"+
+"等级 Lv."+player.level+
+"<br>生命+40<br>攻击+10"
+
+);
+
+
+
+}
+
+
+
+}
+
+
+// =========================
+// Boss战斗
+// =========================
+
+function fightBoss(){
+
+
+if(bossHP<=0){
+
+
+log(
+"👑 Boss已经被击败！<br>"+
+"你已经获得遗迹最终宝藏！"
+);
+
+
+return;
+
+
+}
+
+
+
+let damage=
+
+player.atk+
+
+Math.floor(Math.random()*50);
+
+
+
+bossHP-=damage;
+
+
+
+let hurt=
+
+Math.floor(Math.random()*30)+10;
+
+
+
+player.hp-=hurt;
+
+
+
+if(bossHP<=0){
+
+
+bossHP=0;
+
+
+player.gold+=1000;
+
+
+player.bag.push(
+"👑 遗迹之王皇冠"
+);
+
+
+player.atk+=100;
+
+
+
+log(
+
+"🎉🎉🎉<br>"+
+"你击败了最终Boss！<br>"+
+"获得：遗迹之王皇冠<br>"+
+"金币+1000<br>"+
+"攻击+100"
+
+);
+
+
+
+}
+
+else{
+
+
+log(
+
+"🐉 攻击远古巨龙<br>"+
+"造成伤害："+damage+
+"<br>Boss剩余HP："+bossHP+
+"<br>受到反击："+hurt
+
+);
+
+
+
+}
+
+
+
+if(player.hp<=0){
+
+
+
+player.hp=player.maxhp;
+
+
+player.gold=Math.max(
+0,
+player.gold-100
+);
+
+
+
+log(
+
+"☠ 被Boss击败<br>"+
+"消耗100金币复活"
+
+);
+
+
+
+}
+
+
+
+update();
+
+
+}
+
+
+
 
 
 </script>
 
 
 </body>
+
 
 </html>
