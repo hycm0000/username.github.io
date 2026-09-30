@@ -1,99 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>遗迹寻宝 RPG</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 
 <style>
 
 body{
-margin:0;
 background:#111;
 color:white;
-font-family:"Microsoft YaHei";
+font-family:Microsoft YaHei;
+margin:0;
 }
 
-.box{
-
+.main{
 max-width:500px;
 margin:auto;
 padding:15px;
-
 }
-
 
 .card{
-
 background:#222;
 padding:15px;
-border-radius:15px;
 margin-bottom:15px;
-
+border-radius:15px;
 }
-
 
 button{
-
 width:100%;
-padding:14px;
-margin-top:8px;
-
-border:none;
+padding:15px;
+margin-top:10px;
+border:0;
 border-radius:10px;
-
 background:#4caf50;
-
 color:white;
-
 font-size:18px;
-
 }
-
 
 input{
-
 width:90%;
 padding:12px;
-
 font-size:18px;
-
 }
-
 
 .hp{
-
-color:#ff5555;
-
+color:red;
 }
-
 
 .gold{
-
 color:#ffd700;
-
 }
-
-
-.item{
-
-background:#333;
-
-padding:8px;
-
-border-radius:8px;
-
-margin:5px;
-
-}
-
 
 </style>
-
 
 </head>
 
@@ -101,17 +61,15 @@ margin:5px;
 <body>
 
 
-<div class="box">
+<div class="main">
 
 
 <div class="card">
 
-<h2>
-🏰 遗迹寻宝 RPG
-</h2>
+<h2>🏰 遗迹寻宝 RPG</h2>
 
 <p>
-2小时微信群冒险小游戏
+微信群2小时冒险小游戏
 </p>
 
 </div>
@@ -121,12 +79,11 @@ margin:5px;
 <div class="card" id="create">
 
 
-<h3>
-创建角色
-</h3>
+<h3>创建角色</h3>
 
 
-<input id="name" placeholder="输入你的名字">
+<input id="name"
+placeholder="输入你的名字">
 
 
 <button onclick="startGame()">
@@ -140,7 +97,6 @@ margin:5px;
 
 
 
-
 <div id="game" style="display:none">
 
 
@@ -150,36 +106,34 @@ margin:5px;
 <h3 id="playerName"></h3>
 
 
-等级:
+等级：
 <span id="level"></span>
 
 <br>
 
 
-生命:
+生命：
 <span class="hp" id="hp"></span>
-
 
 <br>
 
 
-攻击:
+攻击：
 <span id="atk"></span>
 
 
 <br>
 
 
-金币:
+金币：
 <span class="gold" id="gold"></span>
 
 
 <br>
 
 
-经验:
+经验：
 <span id="exp"></span>
-
 
 
 </div>
@@ -187,14 +141,10 @@ margin:5px;
 
 
 
-
 <div class="card">
 
 
-<h3>
-🎒 背包
-</h3>
-
+<h3>🎒 背包</h3>
 
 <div id="bag">
 
@@ -206,23 +156,25 @@ margin:5px;
 
 
 
-
 <div class="card">
 
 
-<h3>
-🗺 遗迹探索
-</h3>
+<h3>🗺 探索遗迹</h3>
 
 
 <button onclick="explore()">
+
 🔍 探索
+
 </button>
 
 
-<button onclick="fightBoss()">
+<button onclick="bossFight()">
+
 🐉 挑战Boss
+
 </button>
+
 
 
 <p id="log">
@@ -236,22 +188,12 @@ margin:5px;
 
 
 
-
-
 <div class="card">
 
-
-<h3>
-🏆 世界状态
-</h3>
+<h3>世界状态</h3>
 
 
-<p id="status">
-
-</p>
-
-
-</div>
+<p id="status"></p>
 
 
 </div>
@@ -259,6 +201,10 @@ margin:5px;
 
 
 </div>
+
+
+</div>
+
 
 
 
@@ -279,8 +225,7 @@ bag:[]
 };
 
 
-
-let bossHP=500;
+let boss=500;
 
 
 
@@ -290,7 +235,7 @@ function startGame(){
 let n=document.getElementById("name").value;
 
 
-if(n==""){
+if(n.trim()==""){
 
 alert("请输入名字");
 
@@ -311,7 +256,11 @@ document.getElementById("game").style.display="block";
 update();
 
 
+log("🎉 冒险开始！探索遗迹寻找宝藏吧！");
+
+
 }
+
 
 
 
@@ -344,6 +293,7 @@ player.exp;
 
 
 document.getElementById("bag").innerHTML=
+
 player.bag.length?
 player.bag.join("<br>"):
 "暂无装备";
@@ -352,11 +302,12 @@ player.bag.join("<br>"):
 
 document.getElementById("status").innerHTML=
 
-"🐉 Boss剩余生命："+bossHP;
+"🐉 Boss HP："+boss;
 
 
 
 }
+
 
 
 
@@ -367,11 +318,10 @@ document.getElementById("log").innerHTML=t;
 }
 
 
-// =========================
-// 探索系统
-// =========================
+
 
 function explore(){
+
 
 let r=Math.random();
 
@@ -382,7 +332,7 @@ treasure();
 
 }
 
-else if(r<0.80){
+else if(r<0.8){
 
 monster();
 
@@ -390,16 +340,15 @@ monster();
 
 else{
 
-randomEvent();
+event();
 
 }
 
 
 update();
 
+
 }
-
-
 
 // =========================
 // 宝箱
@@ -411,25 +360,23 @@ function treasure(){
 let r=Math.random();
 
 
+
 if(r<0.5){
 
 
-let gold=
-Math.floor(Math.random()*50)+20;
+let g=Math.floor(Math.random()*50)+20;
 
 
-player.gold+=gold;
+player.gold+=g;
 
 
 log(
-"📦 发现普通宝箱！<br>"+
-"获得金币 +"+gold
+"📦 发现普通宝箱<br>"+
+"获得金币 +"+g
 );
 
 
 }
-
-
 
 else if(r<0.85){
 
@@ -438,22 +385,18 @@ player.atk+=10;
 
 
 player.bag.push(
-"⚔ 精铁剑 (攻击+10)"
+"⚔ 精铁剑 攻击+10"
 );
 
 
-
 log(
-"💎 打开稀有宝箱！<br>"+
+"💎 稀有宝箱<br>"+
 "获得精铁剑<br>"+
 "攻击提升"
 );
 
 
-
 }
-
-
 
 else{
 
@@ -462,21 +405,18 @@ player.atk+=30;
 
 
 player.bag.push(
-"🔥 炎龙剑 (攻击+30)"
+"🔥 炎龙剑 攻击+30"
 );
-
 
 
 log(
 "★★★★★<br>"+
-"发现传说宝箱！<br>"+
+"传说宝箱开启！<br>"+
 "获得炎龙剑"
 );
 
 
-
 }
-
 
 
 }
@@ -484,14 +424,14 @@ log(
 
 
 // =========================
-// 怪物战斗
+// 怪物
 // =========================
 
 
 function monster(){
 
 
-let monsters=[
+let list=[
 
 "哥布林",
 "骷髅战士",
@@ -502,20 +442,19 @@ let monsters=[
 ];
 
 
-let name=
-monsters[
-Math.floor(Math.random()*monsters.length)
+let enemy=
+list[
+Math.floor(Math.random()*list.length)
 ];
 
 
 
-let enemyHP=
+let hp=
 Math.floor(Math.random()*80)+30;
 
 
 
-if(player.atk>=enemyHP){
-
+if(player.atk>=hp){
 
 
 let exp=
@@ -526,7 +465,6 @@ let gold=
 Math.floor(Math.random()*40)+10;
 
 
-
 player.exp+=exp;
 
 player.gold+=gold;
@@ -535,9 +473,9 @@ player.gold+=gold;
 
 log(
 
-"⚔ 击败 "+name+
-"<br>获得经验 +"+exp+
-"<br>获得金币 +"+gold
+"⚔ 击败 "+enemy+
+"<br>经验 +"+exp+
+"<br>金币 +"+gold
 
 );
 
@@ -556,16 +494,15 @@ let damage=
 Math.floor(Math.random()*20)+5;
 
 
-
 player.hp-=damage;
 
 
 
 log(
 
-"👹 遇到 "+name+
+"👹 遇到 "+enemy+
 "<br>受到伤害 -"+damage+
-"<br>剩余生命 "+player.hp
+"<br>生命剩余 "+player.hp
 
 );
 
@@ -574,22 +511,22 @@ log(
 if(player.hp<=0){
 
 
+player.hp=player.maxhp;
+
 player.gold=Math.max(
 0,
 player.gold-50
 );
 
 
-player.hp=player.maxhp;
-
-
 log(
-"☠ 你被击败<br>"+
-"消耗50金币复活"
+"☠ 战败<br>"+
+"损失50金币复活"
 );
 
 
 }
+
 
 
 }
@@ -606,59 +543,50 @@ log(
 // =========================
 
 
-function randomEvent(){
+function event(){
 
 
-let events=[
+let arr=[
 
 
 "🌲 发现生命泉水，恢复20生命",
 
-"💰 发现遗落金币，获得50金币",
+"💰 找到金币，获得50金币",
 
-"🧙 神秘老人赠送药水",
+"🧙 神秘老人送你药水",
 
-"☠ 陷阱发动，损失15生命"
-
+"☠ 触发陷阱，损失15生命"
 
 ];
 
 
 let e=
-events[
-Math.floor(Math.random()*events.length)
-];
+arr[Math.floor(Math.random()*arr.length)];
 
 
 
-if(e.includes("恢复")){
-
+if(e.indexOf("恢复")>-1){
 
 player.hp=Math.min(
 player.maxhp,
 player.hp+20
 );
 
-
 }
 
 
 
-if(e.includes("金币")){
-
+if(e.indexOf("金币")>-1){
 
 player.gold+=50;
 
-
 }
 
 
 
-if(e.includes("损失")){
-
+if(e.indexOf("损失")>-1){
 
 player.hp-=15;
-
 
 }
 
@@ -710,8 +638,8 @@ player.atk+=8;
 log(
 
 "🎉 升级成功！<br>"+
-"等级提升到 Lv."+player.level+
-"<br>生命+30<br>攻击+8"
+"达到 Lv."+player.level+
+"<br>攻击+8 生命+30"
 
 );
 
@@ -725,19 +653,18 @@ log(
 
 
 // =========================
-// Boss战
+// Boss
 // =========================
 
 
-function fightBoss(){
+function bossFight(){
 
 
-if(bossHP<=0){
+if(boss<=0){
 
 
 log(
-"🏆 Boss已经被击败！<br>"+
-"你获得最终宝藏！"
+"👑 已经获得最终宝藏！"
 );
 
 
@@ -754,22 +681,23 @@ Math.floor(Math.random()*30);
 
 
 
-bossHP-=damage;
+boss-=damage;
 
 
 
 let hurt=
-Math.floor(Math.random()*20)+5;
+Math.floor(Math.random()*15)+5;
+
 
 
 player.hp-=hurt;
 
 
 
-if(bossHP<=0){
+if(boss<=0){
 
 
-bossHP=0;
+boss=0;
 
 
 player.gold+=500;
@@ -800,9 +728,10 @@ else{
 log(
 
 "🐉 攻击Boss<br>"+
-"造成伤害 "+damage+
-"<br>Boss剩余HP："+bossHP+
-"<br>你受到伤害："+hurt
+"造成 "+damage+
+" 伤害<br>"+
+"Boss剩余HP："+boss+
+"<br>受到伤害："+hurt
 
 );
 
@@ -814,13 +743,7 @@ log(
 
 if(player.hp<=0){
 
-
 player.hp=player.maxhp;
-
-log(
-"☠ 被Boss击败，恢复生命"
-);
-
 
 }
 
@@ -837,6 +760,5 @@ update();
 
 
 </body>
-
 
 </html>
